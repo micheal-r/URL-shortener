@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Page</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Original URL</th>
+                    <th>Short URL</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% urls.forEach(url => { %>
+                    <tr>
+                        <td><%= url.originalUrl %></td>
+                        <td>
+                            <form action="/admin/edit/<%= url._id %>" method="POST" style="display:inline;">
+                                <input type="text" name="shortUrl" value="<%= url.shortUrl %>" required>
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/admin/delete/<%= url._id %>" method="POST" style="display:inline;">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <form id="urlForm">
+            <input type="url" name="originalUrl" id="originalUrl" placeholder="Enter your URL" required>
+            <button type="submit">Shorten</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const banned = ["fuck", "porn", "corn", "grabify", "gay", "nigger", "nigel", "nigga", "nikkel", "nika", "nikka", "niggel", "niker", "nikel", "nikker"]
+
+            function checkup(targetString, wordArray) {
+                for (let word of wordArray) {
+                    if (targetString.includes(word)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            const originalUrl = document.getElementById('originalUrl').value;
+            if (checkup(originalUrl, banned)) {
+                return document.getElementById('result').innerHTML = `<p>Your URL contains a banned word and could not be created.</p>`;
+            }
+            try {
+                const response = await fetch('/shorten', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ originalUrl })
+                });
+                const data = await response.json();
+                document.getElementById('result').innerHTML = `<p>Short URL: <a href="/${data.shortUrl}" target="_blank">https://racm.xyz/${data.shortUrl}</a></p>`;
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>
